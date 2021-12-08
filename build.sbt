@@ -1,4 +1,4 @@
-name := "ticket-app"
+name := "ticket-cli-app"
 
 version := "0.1"
 
