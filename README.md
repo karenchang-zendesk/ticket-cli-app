@@ -9,3 +9,5 @@ Mentor: Jack Low
 [Boundary-value analysis](https://en.wikipedia.org/wiki/Boundary-value_analysis)
 
 [Coupling](https://en.wikipedia.org/wiki/Coupling_(computer_programming))
+
+[Dependency Injection](http://di-in-scala.github.io/)

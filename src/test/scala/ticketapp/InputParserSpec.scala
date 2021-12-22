@@ -13,12 +13,14 @@ object InputParserSpec extends FunSuite{
   test("should return None if user input is not a number") {
     val input = UserInput("abc")
     val result: Option[TicketId] = InputParser.parseTicketId(input)
+
     expect(result == None)
   }
 
   test("should return None given non positive value") {
     val input = UserInput("0")
     val result: Option[TicketId] = InputParser.parseTicketId(input)
+
     expect(result == None)
   }
 }

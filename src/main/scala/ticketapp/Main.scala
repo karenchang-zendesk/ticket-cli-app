@@ -2,6 +2,10 @@ package ticketapp
 
 object Main {
   def main(args: Array[String]): Unit = {
-    println("Hello World")
+
+    val service = new TicketService(TicketStore.getTicket)
+    val result = service.getTicket(TicketId(1))
+
+    println(result)
   }
 }
