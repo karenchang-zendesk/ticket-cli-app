@@ -5,7 +5,7 @@ import weaver.monixcompat.FunSuite
 object TicketControllerSpec extends FunSuite {
 
   test("given a valid ticket id, if the ticket exists, should return the ticket description and author") {
-    val testTicket = EnrichedTicket("des", "author", 32)
+    val testTicket = EnrichedTicket("des", "author", Some(32))
     val fetchTicketSuccessfully: TicketId => Option[EnrichedTicket] = _ => Some(testTicket)
     val controller = new TicketController(fetchTicketSuccessfully)
 

@@ -7,7 +7,7 @@ object TicketServiceSpec extends FunSuite {
   test("if the ticket and author both exist, should return the enriched ticket") {
     val testTicket = Ticket("des", "author")
     val testAuthor = Author(Name("author"), Age(20))
-    val testEnrichedTicket = EnrichedTicket("des", "author", 20)
+    val testEnrichedTicket = EnrichedTicket("des", "author", Some(20))
     val fetchTicketSuccessfully: TicketId => Option[Ticket] = _ => Some(testTicket)
     val fetchAuthorSuccessfully: Name => Option[Author] = _ => Some(testAuthor)
     val service = new TicketService(fetchTicketSuccessfully, fetchAuthorSuccessfully)
