@@ -11,3 +11,5 @@ Mentor: Jack Low
 [Coupling](https://en.wikipedia.org/wiki/Coupling_(computer_programming))
 
 [Dependency Injection](http://di-in-scala.github.io/)
+
+[Demystifying functional effect systems in Scala](https://medium.com/wix-engineering/demystifying-functional-effect-systems-in-scala-14419039a423)

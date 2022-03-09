@@ -1,22 +1,29 @@
 package ticketapp
 
-import scala.annotation.tailrec
+import cats.effect.ExitCode
+import monix.eval.{Task, TaskApp}
+
 import scala.io.StdIn
 
-object Main {
+object Main extends TaskApp {
 
   private val service = new TicketService(TicketStore.getTicket, AuthorStore.getAuthor)
   private val controller = new TicketController(service.getTicket)
 
-  def main(args: Array[String]): Unit = {
-    loop()
+  override def run(args: List[String]): Task[ExitCode] = loop().map(_ => ExitCode.Success)
+
+  private def loop(): Task[Unit] = {
+    val z = Task(println("hello"))
+    val y = (userInput: String) => controller.getTicket(UserInput(userInput))
+    val x = Task(StdIn.readLine("Enter Ticket Id: "))
+
+    for {
+      userInput <- x
+      result <- y(userInput)
+      _ <- Task(println(result))
+      _ <- z
+      _ <- loop()
+    } yield ()
   }
 
-  @tailrec
-  private def loop(): Unit = {
-    val userInput = StdIn.readLine("Enter Ticket Id: ")
-    val result = controller.getTicket(UserInput(userInput))
-    println(result)
-    loop()
-  }
 }

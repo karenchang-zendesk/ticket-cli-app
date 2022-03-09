@@ -1,38 +1,40 @@
 package ticketapp
 
+import monix.eval.Task
+import cats.syntax.all._
+
 case class Ticket(description: String, author: String)
 
 case class EnrichedTicket(description: String, author: String, age: Option[Int])
 
-class TicketService(fetchTicket: TicketId => Option[Ticket],
-                    fetchAuthor: Name => Option[Author]) {
+class TicketService(fetchTicket: TicketId => Task[Option[Ticket]],
+                    fetchAuthor: Name => Task[Option[Author]]) {
 
-  def getTicket(id: TicketId): Option[EnrichedTicket] = {
+  def getTicket(id: TicketId): Task[Option[EnrichedTicket]] = {
 
-    //    val maybeTicket = fetchTicket(id)
-    //    maybeTicket match {
-    //      case Some(ticket) =>
-    //        val name = Name(ticket.author)
-    //        val maybeAuthor: Option[Author] = fetchAuthor(name)
-    //        maybeAuthor match {
-    //          case Some(author) => Some(EnrichedTicket(ticket.description, ticket.author, author.age.value))
-    //          case None => None
-    //        }
-    //      case None => None
+    //    fetchTicket(id).map { ticket =>
+    //      val maybeAuthor: Option[Author] = fetchAuthor(Name(ticket.author))
+    //      val maybeAge: Option[Int] = maybeAuthor.map (author => author.age.value)
+    //      EnrichedTicket(ticket.description, ticket.author, maybeAge)
     //    }
 
-//         fetchTicket(id).flatMap(ticket => fetchAuthor(Name(ticket.author)).map(author => EnrichedTicket(ticket.description, ticket.author, author.age.value)))
-
-    fetchTicket(id).map { ticket =>
-      val maybeAuthor: Option[Author] = fetchAuthor(Name(ticket.author))
-      val x: Option[Int] = maybeAuthor.map (author => author.age.value)
-      EnrichedTicket(ticket.description, ticket.author, x)
+    val x: Task[Option[Ticket]] = fetchTicket(id)
+    val result: Task[Option[EnrichedTicket]] = x.flatMap { maybeTicket =>
+      maybeTicket.traverse { ticket =>
+        val y: Task[Option[Author]] = fetchAuthor(Name(ticket.author))
+        val z: Task[Option[Int]] = y.map(maybeAuthor => maybeAuthor.map(author => author.age.value))
+        z.map(maybeAge => EnrichedTicket(ticket.description, ticket.author, maybeAge))
+      }
     }
+   result
+
+    //    for {
+    //      maybeTicket <- fetchTicket(id)
+    //      maybeEnrichedTicket <- maybeTicket.traverse { ticket =>
+    //        val y: Task[Option[Author]] = fetchAuthor(Name(ticket.author))
+    //        val z: Task[Option[Int]] = y.map(maybeAuthor => maybeAuthor.map(author => author.age.value))
+    //        z.map(maybeAge => EnrichedTicket(ticket.description, ticket.author, maybeAge))
+    //      }
+    //    } yield maybeEnrichedTicket
   }
-
-//    for {
-//      ticket <- fetchTicket(id)
-//      author <- fetchAuthor(Name(ticket.author))
-//    } yield EnrichedTicket(ticket.description, ticket.author, author.age.value)
-
 }
