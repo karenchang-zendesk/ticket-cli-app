@@ -26,7 +26,7 @@ class TicketService(fetchTicket: TicketId => Task[Option[Ticket]],
         z.map(maybeAge => EnrichedTicket(ticket.description, ticket.author, maybeAge))
       }
     }
-   result
+    result
 
     //    for {
     //      maybeTicket <- fetchTicket(id)
@@ -38,3 +38,7 @@ class TicketService(fetchTicket: TicketId => Task[Option[Ticket]],
     //    } yield maybeEnrichedTicket
   }
 }
+
+    //  object TicketService {
+    //    def apply(): TicketService = new TicketService(TicketStore.getTicket, AuthorStore.getAuthor)
+    //  }
